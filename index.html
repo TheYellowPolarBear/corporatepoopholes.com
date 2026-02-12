@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome to corporatepoopholes.com!</title>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #111;
+  }
+
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const img = new Image();
+img.src = "images/branca.jpg";
+
+// number of bouncing images
+const COUNT = 25;
+
+const balls = [];
+
+img.onload = () => {
+  for (let i = 0; i < COUNT; i++) {
+    balls.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.5) * 6,
+      size: 60 + Math.random() * 40
+    });
+  }
+
+  animate();
+};
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let b of balls) {
+    // move
+    b.x += b.vx;
+    b.y += b.vy;
+
+    // bounce off walls
+    if (b.x <= 0 || b.x + b.size >= canvas.width) b.vx *= -1;
+    if (b.y <= 0 || b.y + b.size >= canvas.height) b.vy *= -1;
+
+    // draw image
+    ctx.drawImage(img, b.x, b.y, b.size, b.size);
+  }
+
+  requestAnimationFrame(animate);
+}
+</script>
+
+</body>
+</html>
